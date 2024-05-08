@@ -7,11 +7,14 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import { BrowserWindow } from 'electron';
 import { OverlayContainer, useDrop } from 'react-aria';
 import { Heading } from 'react-aria-components';
 import { useFetcher } from 'react-router-dom';
 import styled from 'styled-components';
 import axios, { AxiosResponse } from 'axios';
+import { insomniaFetch } from '../../../main/insomniaFetch';
+import * as _userSession from '../../../models/user-session';
 
 import { isScratchpadProject } from '../../../models/project';
 import { SegmentEvent } from '../../analytics';
@@ -484,23 +487,28 @@ const ScanResourcesForm = ({
     workspaceFileName: '',
     branch: ''
   });
-  const [selectedproject, setSelectedproject] = useState<>
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
   };
-  const fetchData = async (): Promise<void> => {
+
+  const fetchData = async () => {
     try {
-      const apiUrl = `http://192.168.1.4:8081/postman/alt/v1/collection/folders?file-path=arabi-next%2Fv1.0.0&type=file`;
-      const privateToken = 'glpat-CB3hsFaGx8iwC3jEBRpK';
-      const response: AxiosResponse<ResponseData> = await axios.get(apiUrl, {
-        headers: {
-          'PRIVATE-TOKEN': privateToken
-        }
+      const response = await window.main.insomniaFetch<{
+        data: {
+          id: string;
+          name: string;
+        }[];
+      }>({
+        origin: 'http://10.63.0.215:8081',
+        path: `/postman/alt/v1/collection/folders?file-path=&type=folder`,
+        method: 'GET',
+        sessionId: '',
       });
-      console.log('Data from GitLab:', response.data);
+      console.log('response', response);
     } catch (error) {
       console.error('Error fetching data from GitLab:', error.message);
       throw error;
