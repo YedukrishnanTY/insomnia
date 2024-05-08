@@ -392,6 +392,21 @@ interface ImportModalProps extends ModalProps {
     type: 'gitlab';
   };
 }
+interface Project {
+  id: string;
+  mode: string;
+  name: string;
+  path: string;
+  type: string;
+  // Define other properties as needed
+}
+
+interface FormData {
+  workspaceFileName: string | undefined;
+  branch: string | undefined;
+  filePath: string | undefined;
+}
+
 
 export const ImportModal: FC<ImportModalProps> = ({
   projectName,
@@ -483,17 +498,66 @@ const ScanResourcesForm = ({
 }) => {
   const id = useId();
   const [importFrom, setImportFrom] = useState(from?.type || 'uri');
-  const [formData, setFormData] = useState<GitLabRequestParams>({
-    workspaceFileName: '',
-    branch: ''
-  });
+  const [projectName, setProjectName] = React.useState<Project[] | undefined>(undefined);
+  const [versionName, setVersionName] = React.useState<Project[] | undefined>(undefined);
+  const [filePath, setFilePath] = React.useState<Project[] | undefined>(undefined);
+  const [formData, setFormData] = React.useState<FormData>({ workspaceFileName: undefined, branch: undefined, filePath: undefined });
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-  };
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setVersionName(undefined)
+        const response = await window.main.insomniaFetch<{
+          data: Project[];
+        }>({
+          origin: 'http://10.63.0.215:8081',
+          path: `/postman/alt/v1/collection/folders?file-path=${formData?.workspaceFileName}&type=folder`,
+          method: 'GET',
+          sessionId: '',
+        });
+        setVersionName(response);
+        console.log('response', response);
+      } catch (error: any) {
+        console.error('Error fetching data from GitLab:', error.message);
+        throw error;
+      }
+    };
+
+    if (formData.workspaceFileName) {
+      fetchData();
+    }
+  }, [formData?.workspaceFileName]);
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setFilePath(undefined)
+        const response = await window.main.insomniaFetch<{
+          data: Project[];
+        }>({
+          origin: 'http://10.63.0.215:8081',
+          path: `/postman/alt/v1/collection/folders?file-path=${formData?.branch}&type=file`,
+          method: 'GET',
+          sessionId: '',
+        });
+        setFilePath(response);
+        console.log('response', response);
+      } catch (error: any) {
+        console.error('Error fetching data from GitLab:', error.message);
+        throw error;
+      }
+    };
+
+    if (formData.workspaceFileName) {
+      fetchData();
+    }
+  }, [formData?.branch]);
+
 
   const fetchData = async () => {
     try {
@@ -508,6 +572,7 @@ const ScanResourcesForm = ({
         method: 'GET',
         sessionId: '',
       });
+      setProjectName(response)
       console.log('response', response);
     } catch (error) {
       console.error('Error fetching data from GitLab:', error.message);
@@ -516,9 +581,33 @@ const ScanResourcesForm = ({
   };
 
 
+  React.useEffect(() => {
+    fetchData()
+  }, [])
 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 
-  fetchData()
+    e.preventDefault();
+    try {
+      const response = await window.main.insomniaFetch<{
+        data: {
+          id: string;
+          name: string;
+        }[];
+      }>({
+        origin: 'http://10.63.0.215:8081',
+        path: `/postman/alt/v1/collection/file?file-path=${formData?.filePath}`,
+        method: 'GET',
+        sessionId: '',
+      });
+      console.log('response', response);
+
+    } catch (error) {
+      console.error('Error fetching data from GitLab:', error.message);
+      throw error;
+    }
+
+  };
 
 
   return (
@@ -596,20 +685,54 @@ const ScanResourcesForm = ({
         <div className="form-control form-control--outlined">
           <form onSubmit={handleSubmit}>
             <label htmlFor="workspaceFileName">Project:</label>
-            <select id="workspaceFileName" name="workspaceFileName" value={formData.workspaceFileName} onChange={handleChange} required>
+            <select id="workspaceFileName" name="workspaceFileName" required onChange={handleChange} value={formData?.workspaceFileName}>
+              {/* <option value="">Select Project</option> */}
               <option value="">Select Project</option>
-              <option value="project1">Project 1</option>
-              <option value="project2">Project 2</option>
+              {projectName?.map((item: Project, index: number) => (
+                <option key={index} value={item.path}>
+                  {item.name}
+                </option>
+              ))}
               {/* Add more options as needed */}
             </select>
 
-            <label htmlFor="branch">Version:</label>
-            <select id="branch" name="branch" value={formData.branch} onChange={handleChange} required>
-              <option value="">Select Version</option>
-              <option value="version1">Version 1</option>
-              <option value="version2">Version 2</option>
-              {/* Add more options as needed */}
-            </select>
+            {versionName?.length > 0 && (
+              <>
+                <label htmlFor="branch">Version:</label>
+                <select
+                  id="branch"
+                  name="branch"
+                  onChange={handleChange}
+                  value={formData?.branch || ''}
+                  required
+                >
+                  <option value="">Select Version</option>
+                  {/* <option value="">Select Project</option> */}
+                  {versionName?.map((item: Project, index: number) => (
+                    <option key={index} value={item.path}>
+                      {item.name}
+                    </option>
+                  ))}
+                  {/* Add more options as needed */}
+                </select>
+              </>
+            )}
+
+            {filePath?.length > 0 &&
+              <>
+                <label htmlFor="filePath">File:</label>
+                <select id="filePath" name="filePath" required onChange={handleChange} value={formData?.filePath || ''}>
+                  {/* <option value="">Select Project</option> */}
+                  <option value="">Select File</option>
+                  {filePath?.map((item: Project, index: number) => (
+                    <option key={index} value={item.path}>
+                      {item.name}
+                    </option>
+                  ))}
+                  {/* Add more options as needed */}
+                </select>
+              </>
+            }
 
             <Button
               variant="contained"
@@ -621,7 +744,7 @@ const ScanResourcesForm = ({
               }}
               className="btn"
             >
-              <i className="fa fa-file-import" /> Scan
+              <i className="fa fa-file-import" /> Import
             </Button>
           </form>
         </div>
