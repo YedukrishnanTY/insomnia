@@ -483,13 +483,13 @@ const ScanResourcesForm = ({
 }) => {
   const id = useId();
   const [importFrom, setImportFrom] = useState(from?.type || 'uri');
-  const [formData, setFormData] = useState<GitLabRequestParams>({
-    workspaceFileName: '',
-    branch: ''
-  });
+  // const [formData, setFormData] = useState<GitLabRequestParams>({
+  //   workspaceFileName: '',
+  //   branch: '',
+  // });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    // setFormData({ ...formData, [e.target.name]: e.target.value });
   };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
