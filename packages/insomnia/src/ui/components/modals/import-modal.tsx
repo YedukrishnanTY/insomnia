@@ -505,7 +505,7 @@ const ScanResourcesForm = ({
 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    // setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   React.useEffect(() => {
