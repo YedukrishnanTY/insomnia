@@ -460,9 +460,11 @@ const OrganizationRoute = () => {
         <div className={`w-full h-full divide-x divide-solid divide-[--hl-md] ${isOrganizationSidebarOpen ? 'with-navbar' : ''} ${isScratchPadBannerVisible ? 'with-banner' : ''} grid-template-app-layout grid relative bg-[--color-bg]`}>
           <header className="[grid-area:Header] grid grid-cols-3 items-center border-b border-solid border-[--hl-md]">
             <div className="flex items-center gap-2">
-              <div className="flex shrink-0 w-[50px] justify-center py-2">
+              {/* <div className="flex shrink-0 w-[50px] justify-center py-2">
                 <InsomniaLogo loading={loadingAI} />
-              </div>
+              </div> */}
+              <label className='text-[--color-font]' style={{padding:'10px'}} >ACABES API MASTER</label>
+              
               <CommandPalette />
               {!user ? <GitHubStarsButton /> : null}
             </div>

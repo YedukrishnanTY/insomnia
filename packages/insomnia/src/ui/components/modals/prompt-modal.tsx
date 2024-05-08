@@ -182,7 +182,7 @@ export const PromptModal = forwardRef<PromptModalHandle, ModalProps>((_, ref) =>
       </ModalBody>
       <ModalFooter>
         <div className="margin-left faint italic txt-sm">{hint ? `* ${hint}` : ''}</div>
-        <button className="btn" onClick={handleSubmit}>
+        <button className="btn" style={{backgroundColor:'#004692'}} onClick={handleSubmit}>
           {submitName || 'Submit'}
         </button>
       </ModalFooter>

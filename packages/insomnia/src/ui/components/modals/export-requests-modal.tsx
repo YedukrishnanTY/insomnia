@@ -310,6 +310,7 @@ export const ExportRequestsModal = ({ workspace, onClose }: { workspace: Workspa
                   Cancel
                 </Button>
                 <Button
+                style={{backgroundColor:'#004692'}}
                   onPress={() => {
                     state?.treeRoot && exportRequestsToFile(getSelectedRequestIds(state.treeRoot));
                     close();

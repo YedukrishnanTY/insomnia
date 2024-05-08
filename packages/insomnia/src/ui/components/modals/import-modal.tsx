@@ -202,7 +202,7 @@ const FileField: FC = () => {
               Drag and Drop or{' '}
               <span
                 style={{
-                  color: 'var(--color-surprise)',
+                  color: '#004692',
                 }}
               >
                 Choose a File
@@ -741,6 +741,7 @@ const ScanResourcesForm = ({
               style={{
                 height: '40px',
                 gap: 'var(--padding-sm)',
+                backgroundColor:'#004692'
               }}
               className="btn"
             >
@@ -820,6 +821,7 @@ const ScanResourcesForm = ({
             style={{
               height: '40px',
               gap: 'var(--padding-sm)',
+              backgroundColor: '#004692'
             }}
             form={id}
             className="btn"

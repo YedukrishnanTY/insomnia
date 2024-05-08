@@ -64,16 +64,16 @@ const Login = () => {
   };
 
   return (
-    <div
+    <div style={{backgroundColor:'#004692'}}
       className='flex flex-col gap-[--padding-md]'
     >
-      <p className='text-center text-[--color-font] text-2xl py-[--padding-md]'>
-        Welcome to Arabi Postman
+      <p style={{color:'white'}} className='text-center  text-3xl py-[--padding-md]'>
+        Welcome to Acabes API Master
       </p>
-      <p className='text-[--color-font] text-sm'>
+      <p  style={{color:'white'}}className='text-[--color-font] text-sm'>
        Glad you're here! Let Arabi Postman revolutionize the way you work with APIs.
       </p>
-      <p className='text-[--color-font] text-sm'>
+      <p  style={{color:'white'}}className='text-[--color-font] text-sm'>
         Discover Local, Cloud or Git storage for your projects.
       </p>
       {/* <Button
@@ -156,6 +156,7 @@ const Login = () => {
 
       <div className='flex gap-[--padding-md] justify-center'>
         <Button
+        style={{color:'white'}}
           onPress={() => {
             window.main.trackSegmentEvent({
               event: SegmentEvent.selectScratchpad,
@@ -168,7 +169,7 @@ const Login = () => {
           <div>
             <i className='fa fa-edit' />
           </div>
-          <span>
+          <span >
             Use the local Scratch Pad
           </span>
         </Button>

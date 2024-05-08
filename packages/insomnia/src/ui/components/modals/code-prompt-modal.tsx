@@ -167,7 +167,7 @@ export const CodePromptModal = forwardRef<CodePromptModalHandle, ModalProps>((_,
           </Dropdown>
         ) : null}
         <div className="margin-left faint italic txt-sm">{hint ? `* ${hint}` : ''}</div>
-        <button className="btn" onClick={() => modalRef.current?.hide()}>
+        <button className="btn" style={{backgroundColor:'#004692'}} onClick={() => modalRef.current?.hide()}>
           {submitName || 'Submit'}
         </button>
       </ModalFooter>

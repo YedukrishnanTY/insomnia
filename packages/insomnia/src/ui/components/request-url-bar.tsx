@@ -26,11 +26,11 @@ import { VariableMissingErrorModal } from './modals/variable-missing-error-modal
 
 const StyledDropdownButton = styled(DropdownButton)({
   '&:hover:not(:disabled)': {
-    backgroundColor: 'var(--color-surprise)',
+    backgroundColor: '#004692',
   },
 
   '&:focus:not(:disabled)': {
-    backgroundColor: 'var(--color-surprise)',
+    backgroundColor: '#004692',
   },
 });
 
@@ -266,6 +266,7 @@ export const RequestUrlBar = forwardRef<RequestUrlBarHandle, Props>(({
           ) : (
             <>
               <button
+              style={{borderTopLeftRadius:'2rem' , borderBottomLeftRadius:'2rem'}}
                 onClick={() => sendOrConnect()}
                 className={`urlbar__send-btn ${isEventStreamRequest(activeRequest) ? 'rounded-sm' : 'rounded-l-sm'}`}
                 type="button"

@@ -135,8 +135,8 @@ const TrailLines = forwardRef<TrailsLineHandle, Props>(
       >
         <defs>
           <linearGradient id={`${id}-lgradient-base-lines`}>
-            <stop offset="0" stopColor="#d530e0" stopOpacity="0" />
-            <stop offset="1" stopColor="#d530e0" />
+            <stop offset="0" stopColor="#004692" stopOpacity="0" />
+            <stop offset="1" stopColor="#004692" />
           </linearGradient>
           <linearGradient id={`${id}-lgradient-01`}>
             <stop offset="0.0" stopColor="rgba(255, 117, 134, 1)" stopOpacity="0" />
@@ -159,12 +159,12 @@ const TrailLines = forwardRef<TrailsLineHandle, Props>(
             <stop offset="1.0" stopColor="rgba(96, 255, 236, 1)" />
           </linearGradient>
           <radialGradient id={`${id}-rgradient-dot-back`}>
-            <stop offset="0" stopColor="rgba(255, 233, 157, .2)" />
-            <stop offset="1" stopColor="rgba(255, 233, 157, 0)" stopOpacity="0" />
+            <stop offset="0" stopColor="#004692" />
+            <stop offset="1" stopColor="#FFFFFF" stopOpacity="-0.8" />
           </radialGradient>
           <radialGradient id={`${id}-rgradient-dot-front`}>
-            <stop offset="0" stopColor="rgba(173, 68, 255, .96)" />
-            <stop offset="1" stopColor="rgba(173, 68, 255, 0)" stopOpacity="0" />
+            <stop offset="0" stopColor="#004692" />
+            <stop offset="1" stopColor="#FFFFFF" stopOpacity="-0.8" />
           </radialGradient>
         </defs>
         {showPaths && renderPaths({ id, width, height, totalLines })}

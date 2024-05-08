@@ -60,8 +60,9 @@ export const TrailLinesContainer = ({ children }: PropsWithChildren) => {
       ref={containerRef}
       className='z-0 flex justify-center items-center m-0 auto w-full overflow-hidden'
     >
-      <div>
-        {dimensions && <TrailLines id="start" ref={startTailRef} width={dimensions.width} height={dimensions.height} />}
+      <div
+      >
+        {dimensions && <TrailLines  id="start" ref={startTailRef} width={dimensions.width} height={dimensions.height} />}
       </div>
       <div className='flex w-min' ref={childrenContainerRef}>
         {children}
