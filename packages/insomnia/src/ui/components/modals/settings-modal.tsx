@@ -76,11 +76,11 @@ export const SettingsModal = forwardRef<SettingsModalHandle, ModalProps>((props,
               <Plugins />
             </PanelContainer>
           </TabItem>
-          <TabItem key="ai" title="AI">
+          {/* <TabItem key="ai" title="AI">
             <PanelContainer className="pad">
               <AI />
             </PanelContainer>
-          </TabItem>
+          </TabItem> */}
         </Tabs>
       </ModalBody>
     </Modal>

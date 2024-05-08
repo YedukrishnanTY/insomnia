@@ -7,10 +7,14 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import { BrowserWindow } from 'electron';
 import { OverlayContainer, useDrop } from 'react-aria';
 import { Heading } from 'react-aria-components';
 import { useFetcher } from 'react-router-dom';
 import styled from 'styled-components';
+import axios, { AxiosResponse } from 'axios';
+import { insomniaFetch } from '../../../main/insomniaFetch';
+import * as _userSession from '../../../models/user-session';
 
 import { isScratchpadProject } from '../../../models/project';
 import { SegmentEvent } from '../../analytics';
@@ -30,6 +34,14 @@ const Pill = styled.div({
   borderRadius: 'var(--radius-md)',
   fontSize: 'var(--font-size-xs)',
 });
+
+interface GitLabRequestParams {
+  baseUrl: string;
+  accessToken: string;
+  projectId: number;
+  workspaceFileName: string;
+  branch: string;
+}
 
 const RadioGroup = styled.div({
   display: 'flex',
@@ -376,6 +388,8 @@ interface ImportModalProps extends ModalProps {
   }
   | {
     type: 'clipboard';
+  } | {
+    type: 'gitlab';
   };
 }
 
@@ -458,7 +472,6 @@ export const ImportModal: FC<ImportModalProps> = ({
     </OverlayContainer>
   );
 };
-
 const ScanResourcesForm = ({
   onSubmit,
   from,
@@ -470,6 +483,43 @@ const ScanResourcesForm = ({
 }) => {
   const id = useId();
   const [importFrom, setImportFrom] = useState(from?.type || 'uri');
+  // const [formData, setFormData] = useState<GitLabRequestParams>({
+  //   workspaceFileName: '',
+  //   branch: '',
+  // });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+  };
+
+  const fetchData = async () => {
+    try {
+      const response = await window.main.insomniaFetch<{
+        data: {
+          id: string;
+          name: string;
+        }[];
+      }>({
+        origin: 'http://10.63.0.215:8081',
+        path: `/postman/alt/v1/collection/folders?file-path=&type=folder`,
+        method: 'GET',
+        sessionId: '',
+      });
+      console.log('response', response);
+    } catch (error) {
+      console.error('Error fetching data from GitLab:', error.message);
+      throw error;
+    }
+  };
+
+
+
+
+  fetchData()
+
 
   return (
     <Fragment>
@@ -513,6 +563,16 @@ const ScanResourcesForm = ({
               <i className="fa fa-clipboard" />
               Clipboard
             </Radio>
+            {/* gitlab radio btn */}
+            <Radio
+              onChange={() => setImportFrom('gitlab')}
+              name="importFrom"
+              value="gitlab"
+              checked={importFrom === 'gitlab'}
+            >
+              <i className="fa fa-gitlab" />
+              gitlab
+            </Radio>
           </RadioGroup>
         </Fieldset>
         {importFrom === 'file' && <FileField />}
@@ -530,6 +590,42 @@ const ScanResourcesForm = ({
           </div>
         )}
       </form>
+
+
+      {importFrom === 'gitlab' && (
+        <div className="form-control form-control--outlined">
+          <form onSubmit={handleSubmit}>
+            <label htmlFor="workspaceFileName">Project:</label>
+            <select id="workspaceFileName" name="workspaceFileName" value={formData.workspaceFileName} onChange={handleChange} required>
+              <option value="">Select Project</option>
+              <option value="project1">Project 1</option>
+              <option value="project2">Project 2</option>
+              {/* Add more options as needed */}
+            </select>
+
+            <label htmlFor="branch">Version:</label>
+            <select id="branch" name="branch" value={formData.branch} onChange={handleChange} required>
+              <option value="">Select Version</option>
+              <option value="version1">Version 1</option>
+              <option value="version2">Version 2</option>
+              {/* Add more options as needed */}
+            </select>
+
+            <Button
+              variant="contained"
+              bg="surprise"
+              type="submit"
+              style={{
+                height: '40px',
+                gap: 'var(--padding-sm)',
+              }}
+              className="btn"
+            >
+              <i className="fa fa-file-import" /> Scan
+            </Button>
+          </form>
+        </div>
+      )}
       <div>
         {errors && errors.length > 0 && (
           <div className="notice error margin-top-sm">
@@ -540,73 +636,75 @@ const ScanResourcesForm = ({
           </div>
         )}
       </div>
-      <div
-        style={{
-          display: 'flex',
-          gap: 'var(--padding-sm)',
-          justifyContent: 'space-between',
-          alignItems: 'flex-end',
-        }}
-      >
-        <div>
-          <div
-            style={{
-              paddingBottom: 'var(--padding-sm)',
-            }}
-          >
-            Supported Formats
+      {importFrom === 'gitlab' ? <></> :
+        <div
+          style={{
+            display: 'flex',
+            gap: 'var(--padding-sm)',
+            justifyContent: 'space-between',
+            alignItems: 'flex-end',
+          }}
+        >
+          <div>
+            <div
+              style={{
+                paddingBottom: 'var(--padding-sm)',
+              }}
+            >
+              Supported Formats
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: 'var(--padding-sm)',
+              }}
+            >
+              <Pill>
+                <InsomniaIcon />
+                Insomnia
+              </Pill>
+              <Pill>
+                <i className="fa-regular fa-file fa-lg" />
+                Postman
+              </Pill>
+              <Pill>
+                <SwaggerIcon />
+                Swagger
+              </Pill>
+              <Pill>
+                <OpenAPIIcon />
+                OpenAPI
+              </Pill>
+              <Pill>
+                <CurlIcon />
+                cURL
+              </Pill>
+              <Pill>
+                <i className="fa-regular fa-file fa-lg" />
+                HAR
+              </Pill>
+              <Pill>
+                <i className="fa-regular fa-file fa-lg" />
+                WSDL
+              </Pill>
+            </div>
           </div>
-          <div
+          <Button
+            variant="contained"
+            bg="surprise"
+            type="submit"
             style={{
-              display: 'flex',
-              flexWrap: 'wrap',
+              height: '40px',
               gap: 'var(--padding-sm)',
             }}
+            form={id}
+            className="btn"
           >
-            <Pill>
-              <InsomniaIcon />
-              Insomnia
-            </Pill>
-            <Pill>
-              <i className="fa-regular fa-file fa-lg" />
-              Postman
-            </Pill>
-            <Pill>
-              <SwaggerIcon />
-              Swagger
-            </Pill>
-            <Pill>
-              <OpenAPIIcon />
-              OpenAPI
-            </Pill>
-            <Pill>
-              <CurlIcon />
-              cURL
-            </Pill>
-            <Pill>
-              <i className="fa-regular fa-file fa-lg" />
-              HAR
-            </Pill>
-            <Pill>
-              <i className="fa-regular fa-file fa-lg" />
-              WSDL
-            </Pill>
-          </div>
-        </div>
-        <Button
-          variant="contained"
-          bg="surprise"
-          type="submit"
-          style={{
-            height: '40px',
-            gap: 'var(--padding-sm)',
-          }}
-          form={id}
-          className="btn"
-        >
-          <i className="fa fa-file-import" /> Scan
-        </Button>
-      </div>
+            <i className="fa fa-file-import" /> Scan
+          </Button>
+        </div>}
+
     </Fragment>
   );
 };
@@ -634,7 +732,7 @@ const ImportResourcesForm = ({
   errors?: string[];
   onSubmit?: (e: React.FormEvent<HTMLFormElement>) => void;
   disabled: boolean;
-    loading: boolean;
+  loading: boolean;
 }
 ) => {
   const id = useId();
@@ -754,32 +852,32 @@ const ImportResourcesForm = ({
             )}
             {scanResult.environments &&
               scanResult.environments.length > 0 && (
-              <tr className="table--no-outline-row">
-                <td>
-                  {scanResult.environments.length}{' '}
-                  {scanResult.environments.length === 1
-                    ? 'Environment'
-                    : 'Environments'}
-                  {' with '}
-                  {scanResult.cookieJars?.length}{' '}
-                  {scanResult.cookieJars?.length === 1 ? 'Cookie Jar' : 'Cookie Jars'}
-                </td>
-              </tr>
-            )}
+                <tr className="table--no-outline-row">
+                  <td>
+                    {scanResult.environments.length}{' '}
+                    {scanResult.environments.length === 1
+                      ? 'Environment'
+                      : 'Environments'}
+                    {' with '}
+                    {scanResult.cookieJars?.length}{' '}
+                    {scanResult.cookieJars?.length === 1 ? 'Cookie Jar' : 'Cookie Jars'}
+                  </td>
+                </tr>
+              )}
             {scanResult.unitTestSuites &&
               scanResult.unitTestSuites?.length > 0 && (
-              <tr className="table--no-outline-row">
-                <td>
-                  {scanResult.unitTestSuites.length}{' '}
-                  {scanResult.unitTestSuites.length === 1
-                    ? 'Test Suite'
-                    : 'Test Suites'}
-                  {' with '}
-                  {scanResult.unitTests?.length}
-                  {scanResult.unitTests?.length === 1 ? ' Test' : ' Tests'}
-                </td>
-              </tr>
-            )}
+                <tr className="table--no-outline-row">
+                  <td>
+                    {scanResult.unitTestSuites.length}{' '}
+                    {scanResult.unitTestSuites.length === 1
+                      ? 'Test Suite'
+                      : 'Test Suites'}
+                    {' with '}
+                    {scanResult.unitTests?.length}
+                    {scanResult.unitTests?.length === 1 ? ' Test' : ' Tests'}
+                  </td>
+                </tr>
+              )}
             {scanResult.mockRoutes &&
               scanResult.mockRoutes?.length > 0 && (
                 <tr className="table--no-outline-row">

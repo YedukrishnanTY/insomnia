@@ -1004,7 +1004,7 @@ strong {
   color: var(--color-success);
 }
 .icon:hover {
-  color: var(--color-font);
+  color: #004692;
 }
 .btn {
   text-align: center;
@@ -1391,7 +1391,7 @@ html {
   color: var(--hl-lg);
 }
 .editor .CodeMirror-guttermarker-subtle:hover {
-  color: var(--hl);
+  color: #004692;
 }
 .editor .CodeMirror-gutters {
   background-color: var(--color-bg);
@@ -3396,7 +3396,7 @@ input.editable {
   padding-left: var(--padding-md);
   margin-left: 0.75em;
   text-align: center;
-  background: var(--color-surprise);
+  background: #004692;
   color: var(--color-font-surprise);
 }
 .urlbar .urlbar__flex__right {
@@ -3412,7 +3412,7 @@ input.editable {
   padding-right: var(--padding-xs);
   padding-left: var(--padding-xs);
   text-align: center;
-  background: var(--color-surprise);
+  background: #004692;
   color: var(--color-font-surprise);
 }
 .urlbar .urlbar__send-context,
