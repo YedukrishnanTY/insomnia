@@ -480,48 +480,37 @@ const ScanResourcesForm = ({
 }) => {
   const id = useId();
   const [importFrom, setImportFrom] = useState(from?.type || 'uri');
-
   const [formData, setFormData] = useState<GitLabRequestParams>({
-    baseUrl: '',
-    accessToken: '',
-    projectId: '',
     workspaceFileName: '',
     branch: ''
   });
-
+  const [selectedproject, setSelectedproject] = useState<>
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+  };
+  const fetchData = async (): Promise<void> => {
     try {
-      const apiUrl = `${formData.baseUrl}/projects/${formData.projectId}/repository/files/${encodeURIComponent(formData.workspaceFileName)}?ref=${formData.branch}`;
-
-      const xhr = new XMLHttpRequest();
-      xhr.open('GET', apiUrl);
-      xhr.setRequestHeader('PRIVATE-TOKEN', formData.accessToken);
-
-      xhr.onload = function () {
-        if (xhr.status >= 200 && xhr.status < 300) {
-          const responseData = JSON.parse(xhr.responseText);
-          console.log('Data from GitLab:', responseData);
-        } else {
-          throw new Error(`Failed to fetch data. Status: ${xhr.status}`);
+      const apiUrl = `http://192.168.1.4:8081/postman/alt/v1/collection/folders?file-path=arabi-next%2Fv1.0.0&type=file`;
+      const privateToken = 'glpat-CB3hsFaGx8iwC3jEBRpK';
+      const response: AxiosResponse<ResponseData> = await axios.get(apiUrl, {
+        headers: {
+          'PRIVATE-TOKEN': privateToken
         }
-      };
-
-      xhr.onerror = function () {
-        console.error('Error fetching data from GitLab:', xhr.statusText);
-      };
-
-      xhr.send();
+      });
+      console.log('Data from GitLab:', response.data);
     } catch (error) {
-      console.error('Error fetching data from GitLab:', error);
+      console.error('Error fetching data from GitLab:', error.message);
       throw error;
     }
   };
 
+
+
+
+  fetchData()
 
 
   return (
@@ -598,20 +587,21 @@ const ScanResourcesForm = ({
       {importFrom === 'gitlab' && (
         <div className="form-control form-control--outlined">
           <form onSubmit={handleSubmit}>
-            <label htmlFor="baseUrl">Base URL:</label>
-            <input type="text" id="baseUrl" name="baseUrl" value={formData.baseUrl} onChange={handleChange} required />
+            <label htmlFor="workspaceFileName">Project:</label>
+            <select id="workspaceFileName" name="workspaceFileName" value={formData.workspaceFileName} onChange={handleChange} required>
+              <option value="">Select Project</option>
+              <option value="project1">Project 1</option>
+              <option value="project2">Project 2</option>
+              {/* Add more options as needed */}
+            </select>
 
-            <label htmlFor="accessToken">Access Token:</label>
-            <input type="text" id="accessToken" name="accessToken" value={formData.accessToken} onChange={handleChange} required />
-
-            <label htmlFor="projectId">Project ID:</label>
-            <input type="text" id="projectId" name="projectId" value={formData.projectId} onChange={handleChange} required />
-
-            <label htmlFor="workspaceFileName">Workspace File Name:</label>
-            <input type="text" id="workspaceFileName" name="workspaceFileName" value={formData.workspaceFileName} onChange={handleChange} required />
-
-            <label htmlFor="branch">Branch:</label>
-            <input type="text" id="branch" name="branch" value={formData.branch} onChange={handleChange} required /><br /><br />
+            <label htmlFor="branch">Version:</label>
+            <select id="branch" name="branch" value={formData.branch} onChange={handleChange} required>
+              <option value="">Select Version</option>
+              <option value="version1">Version 1</option>
+              <option value="version2">Version 2</option>
+              {/* Add more options as needed */}
+            </select>
 
             <Button
               variant="contained"
@@ -734,7 +724,7 @@ const ImportResourcesForm = ({
   errors?: string[];
   onSubmit?: (e: React.FormEvent<HTMLFormElement>) => void;
   disabled: boolean;
-    loading: boolean;
+  loading: boolean;
 }
 ) => {
   const id = useId();
