@@ -614,7 +614,7 @@ const ScanResourcesForm = ({
         // Create an anchor element
         const a = document.createElement('a');
         a.href = url;
-        a.download = `${fileName?.name ? fileName?.name : 'data'}.json`; // Specify the filename here
+        a.download = `${fileName?.name ? fileName?.name : 'data'}`; // Specify the filename here
         document.body.appendChild(a);
 
         // Click the anchor element programmatically to trigger download
@@ -763,6 +763,7 @@ const ScanResourcesForm = ({
                 style={{
                   height: '40px',
                   gap: 'var(--padding-sm)',
+                  backgroundColor:'#004692'
                 }}
                 className="btn"
               >
