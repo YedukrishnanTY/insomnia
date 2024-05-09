@@ -521,7 +521,6 @@ const ScanResourcesForm = ({
           sessionId: '',
         });
         setVersionName(response);
-        console.log('response', response);
       } catch (error: any) {
         console.error('Error fetching data from GitLab:', error.message);
         throw error;
@@ -546,7 +545,7 @@ const ScanResourcesForm = ({
           sessionId: '',
         });
         setFilePath(response);
-        console.log('response', response);
+        
       } catch (error: any) {
         console.error('Error fetching data from GitLab:', error.message);
         throw error;
@@ -573,7 +572,7 @@ const ScanResourcesForm = ({
         sessionId: '',
       });
       setProjectName(response)
-      console.log('response', response);
+      
     } catch (error) {
       console.error('Error fetching data from GitLab:', error.message);
       throw error;
@@ -601,7 +600,7 @@ const ScanResourcesForm = ({
         method: 'GET',
         sessionId: '',
       });
-      console.log('response', response);
+      
       if (response) {
         // Convert JSON data to string
         const jsonData = JSON.stringify(response);
