@@ -71,7 +71,7 @@ const Login = () => {
         Welcome to Acabes API Master
       </p>
       <p  style={{color:'white'}}className='text-[--color-font] text-sm'>
-       Glad you're here! Let Arabi Postman revolutionize the way you work with APIs.
+       Glad you're here! Let ACABES API MASTER revolutionize the way you work with APIs.
       </p>
       <p  style={{color:'white'}}className='text-[--color-font] text-sm'>
         Discover Local, Cloud or Git storage for your projects.

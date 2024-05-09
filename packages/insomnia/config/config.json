@@ -1,8 +1,8 @@
 {
-  "name": "Arabi Postman",
+  "name": "ACABES API MASTER",
   "appId": "com.insomnia.app",
   "userDataFolder": "Insomnia",
-  "productName": "Arabi Postman",
+  "productName": "ACABES API MASTER",
   "synopsis": "The Collaborative API Client and Design Tool",
   "icon": "https://github.com/kong/insomnia/blob/develop/packages/insomnia/src/icons/icon.ico?raw=true",
   "changelogUrl": "https://insomnia.rest/changelog",
