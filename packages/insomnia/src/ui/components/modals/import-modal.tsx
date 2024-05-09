@@ -683,7 +683,7 @@ const ScanResourcesForm = ({
               checked={importFrom === 'gitlab'}
             >
               <i className="fa fa-gitlab" />
-              gitlab
+              GitLab
             </Radio>
           </RadioGroup>
         </Fieldset>
@@ -756,19 +756,20 @@ const ScanResourcesForm = ({
                 </select>
               </>
             }
-
-            <Button
-              variant="contained"
-              bg="surprise"
-              type="submit"
-              style={{
-                height: '40px',
-                gap: 'var(--padding-sm)',
-              }}
-              className="btn"
-            >
-              <i className="fa fa-file-import" /> Download
-            </Button>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '10px' }}>
+              <Button
+                variant="contained"
+                bg="surprise"
+                type="submit"
+                style={{
+                  height: '40px',
+                  gap: 'var(--padding-sm)',
+                }}
+                className="btn"
+              >
+                <i className="fa fa-file-import" /> Download
+              </Button>
+            </div>
           </form>
         </div>
       )}
