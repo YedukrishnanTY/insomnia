@@ -553,7 +553,7 @@ const ScanResourcesForm = ({
       }
     };
 
-    if (formData.workspaceFileName) {
+    if (formData.branch) {
       fetchData();
     }
   }, [formData?.branch]);
@@ -587,6 +587,7 @@ const ScanResourcesForm = ({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 
+    const fileName = filePath?.filter((i: { path?: string }) => i.path === formData?.filePath)?.[0];
     e.preventDefault();
     try {
       const response = await window.main.insomniaFetch<{
@@ -601,7 +602,29 @@ const ScanResourcesForm = ({
         sessionId: '',
       });
       console.log('response', response);
+      if (response) {
+        // Convert JSON data to string
+        const jsonData = JSON.stringify(response);
 
+        // Create a Blob object with the JSON data
+        const blob = new Blob([jsonData], { type: 'application/json' });
+
+        // Create a temporary URL for the Blob object
+        const url = URL.createObjectURL(blob);
+
+        // Create an anchor element
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${fileName?.name ? fileName?.name : 'data'}.json`; // Specify the filename here
+        document.body.appendChild(a);
+
+        // Click the anchor element programmatically to trigger download
+        a.click();
+
+        // Cleanup: remove the anchor element and revoke the temporary URL
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
     } catch (error) {
       console.error('Error fetching data from GitLab:', error.message);
       throw error;
@@ -683,7 +706,7 @@ const ScanResourcesForm = ({
 
       {importFrom === 'gitlab' && (
         <div className="form-control form-control--outlined">
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} >
             <label htmlFor="workspaceFileName">Project:</label>
             <select id="workspaceFileName" name="workspaceFileName" required onChange={handleChange} value={formData?.workspaceFileName}>
               {/* <option value="">Select Project</option> */}
@@ -744,7 +767,7 @@ const ScanResourcesForm = ({
               }}
               className="btn"
             >
-              <i className="fa fa-file-import" /> Import
+              <i className="fa fa-file-import" /> Download
             </Button>
           </form>
         </div>
